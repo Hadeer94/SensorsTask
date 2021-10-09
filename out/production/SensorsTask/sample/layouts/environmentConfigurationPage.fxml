@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.collections.FXCollections?>
+<VBox  alignment="CENTER" xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="sample.controller.EnvironmentConfigurationController"
+      prefHeight="400.0" prefWidth="600.0">
+    <Button text="Add Location" onAction="#handleAddingLocation" />
+
+    <GridPane alignment="CENTER" fx:id="addingLocationPane" visible="false">
+        <Label  text=" Location Code " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="locationCode" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+        <Label text="Sensor Type " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <ComboBox fx:id="locationSensorType" value="Humidity" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Humidity"/>
+                    <String fx:value="Light"/>
+                    <String fx:value="Temperature"/>
+                </FXCollections>
+            </items>
+        </ComboBox>
+        <Label  text="Sensor Min Range " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="sensorMinRange" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+        <Label  text="Sensor Max Range " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="sensorMaxRange" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Button onAction="#handelOkButton" text="ok" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+        <Button onAction="#handelCloseButton" text="close" GridPane.columnIndex="2" GridPane.rowIndex="4"/>
+    </GridPane>
+
+</VBox>

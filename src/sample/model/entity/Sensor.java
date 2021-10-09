@@ -32,7 +32,8 @@ public class Sensor {
     @JoinColumn(name = "locationId", referencedColumnName = "locationId")
     private Location locationByLocationId;
 
-    public Sensor(String type,float minRange,float maxRange){
+    public Sensor(int locationId ,String type,float minRange,float maxRange){
+        this.locationByLocationId = new Location(locationId);
         this.type = type;
         this.minRange = minRange;
         this.maxRange = maxRange;

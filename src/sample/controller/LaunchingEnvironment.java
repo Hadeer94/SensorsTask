@@ -1,10 +1,14 @@
 package sample.controller;
 
+import javafx.beans.binding.IntegerBinding;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,6 +16,7 @@ import org.hibernate.cfg.Configuration;
 import sample.model.entity.Location;
 import sample.model.entity.Sensor;
 import javafx.fxml.Initializable;
+import sample.utils.HibernateUtil;
 
 
 import java.net.URL;
@@ -33,25 +38,27 @@ public class LaunchingEnvironment extends Thread implements Initializable {
     Location location;
     @FXML
     private ComboBox environmentLocations;
+    @FXML
+    private GridPane locationDetailsPane;
+    @FXML
+    private VBox sensorsTypes,sensorsValues;
     List<Location> locations;
+    List<Sensor> locationSensors;
 
     @Override
     public void initialize(URL location1, ResourceBundle resources) {
 
-        SessionFactory sessionFactory;
-        Configuration configuration = new Configuration().configure();
-        sessionFactory=configuration.buildSessionFactory();
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        //get locations from database
+        Session session = HibernateUtil.getSessionFactory().openSession();
+
         try{
             locations = session.createQuery("from Location ").list();
-           // environmentLocations.getItems().addAll(locations);
             for(Location location:locations){
                 environmentLocations.getItems().add(location.getLocationId());
-                //System.out.println(locations.get(i).getType());
+
             }
-            /**/
-            // session.getTransaction().commit();
+
+
         }catch (Exception e){
             System.out.print(e.toString());
         }finally{
@@ -62,9 +69,9 @@ public class LaunchingEnvironment extends Thread implements Initializable {
 
 
 
-        humSensor = new Sensor("Humidity",49,89);
-        tempSensor = new Sensor("Temperature",49,89);
-        lightSensor = new Sensor("Light",49,89);
+        humSensor = new Sensor(1,"Humidity",49,89);
+        tempSensor = new Sensor(5,"Temperature",49,89);
+        lightSensor = new Sensor(5,"Light",49,89);
         location  = new Location();
         ArrayList<Sensor> arrayList = new ArrayList<>();
         arrayList.add(humSensor);
@@ -124,14 +131,12 @@ public class LaunchingEnvironment extends Thread implements Initializable {
         if(humiditySensorBtn.getText().equals("Activate")){
             humSensor.setIsActivated(true);
             humiditySensorBtn.setText("Deactivate");
-           // System.out.print("hum is pressed");
 
         }
         else{
             humiditySensorBtn.setText("Activate");
             humSensor.setIsActivated(false);
             humiditySensorReading.setText("");
-           // humSensor.setReading(0);
 
         }
 
@@ -147,7 +152,6 @@ public class LaunchingEnvironment extends Thread implements Initializable {
             lightSensorBtn.setText("Activate");
             lightSensor.setIsActivated(false);
             lightSensorBtn.setText("");
-            // humSensor.setReading(0);
 
         }
     }
@@ -162,10 +166,27 @@ public class LaunchingEnvironment extends Thread implements Initializable {
             tempSensorBtn.setText("Activate");
             tempSensor.setIsActivated(false);
             tempSensorBtn.setText("");
-            // humSensor.setReading(0);
 
         }
     }
 
 
+    public void viewLocationDetails(ActionEvent actionEvent) {
+        locationDetailsPane.setVisible(true);
+        int locationId = Integer.parseInt(environmentLocations.getValue().toString());
+        //get location's sensors from database
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        try{
+            locationSensors = session.createQuery("from Sensor s where s.locationByLocationId.locationId="+locationId).list();
+
+            for(Sensor sensor:locationSensors){
+            }
+
+        }catch (Exception e){
+            System.out.print(e.toString());
+        }finally{
+            session.close();
+        }
+
+    }
 }
